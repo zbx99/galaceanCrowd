@@ -72,8 +72,53 @@ export class LightProcedure extends GALACEAN.Script {
   createDirectLight(){
     this.directLight = this.lightGroup.createChild("directLight");
     const directLightComponent = this.directLight.addComponent(DirectLight);
-    directLightComponent.intensity = 0.6;
+    directLightComponent.intensity = 2//0.6;
     this.directLight.transform.setPosition(0,3,0);
     this.directLight.transform.setRotation(-45,-45,0);
   }
+
+  //创建能够扫描全场的聚光灯
+  createSpotlight(amount:number, radius: number[], color:GALACEAN.Color[], phase:number)
+  {
+    this.sportLightPhase=phase;
+    this.spotLightAmount=amount;
+    this.spotLightRadius=radius;
+    
+    for(let i=0; i<amount;i++)
+    {
+      const light = this.lightGroup.createChild("spotLight"+ i.toString());
+      const spotLightComponent = light.addComponent(SpotLight);
+      spotLightComponent.intensity = 15;
+      light.transform.setPosition(0,50,0); //似乎体育馆的宽度x取值应该是+-200，z取值应该是+-300
+      spotLightComponent.penumbra=100;
+      spotLightComponent.angle=5;
+      spotLightComponent.color = color[i]; // 设置颜色
+      this.spotLights.push(light);
+    }
+  }
+
+  //添加一个cube用来可视化聚光灯spotlight的位置
+  // onStart(): void {
+  //   this.cube!.transform.setPosition(0, 50, 0);
+  //   const renderer = this.cube!.addComponent(GALACEAN.MeshRenderer);
+  //   renderer.mesh = PrimitiveMesh.createCuboid(this.engine);
+  //   // Create material
+  //   const material = new GALACEAN.BlinnPhongMaterial(this.engine);
+  //   material.emissiveColor.set(1, 0, 0, 1);
+  //   renderer.setMaterial(material);
+  // }
+
+  onUpdate(deltaTime: number) {
+    for(let i=0; i<this.spotLightAmount;i++)
+    {
+      this.rotationAngle += deltaTime * this.deltadegree;
+      const x = Math.sin(this.rotationAngle + this.sportLightPhase*i) * this.spotLightRadius[i];
+      const z = Math.cos(this.rotationAngle + this.sportLightPhase*i) * this.spotLightRadius[i];
+          // 更新聚光灯位置
+      this.spotLights[i].transform.setPosition(x, 60, z);
+          // 聚光灯始终朝向中心
+      this.spotLights[i].transform.lookAt(new Vector3(0, 0, 0));
+    }
+
+}
 }
