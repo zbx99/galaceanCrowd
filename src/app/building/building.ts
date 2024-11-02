@@ -108,8 +108,39 @@ export class Building{
       const { materials, animations } = asset;
       const defaultSceneRoot = asset.instantiateSceneRoot();
       this.parentGroup.addChild(defaultSceneRoot);
-      const meshRenderers: any[] = [];
-      defaultSceneRoot.getComponentsIncludeChildren(GALACEAN.MeshRenderer, meshRenderers);
+      // const meshRenderers: any[] = [];
+      // defaultSceneRoot.getComponentsIncludeChildren(GALACEAN.MeshRenderer, meshRenderers);
+            // 在这里应用材质和纹理
+            //const meshRenderers: GALACEAN.MeshRenderer[] = [];
+            defaultSceneRoot.getComponentsIncludeChildren(GALACEAN.MeshRenderer, this.meshRenderers);
+            const texturePath: string="assets/Building/textures/TCom_Ground_Grass01_header.jpg"
+            // 确保纹理在加载时启用 Mipmap 以提高显示效果
+            self.engine.resourceManager.load<GALACEAN.Texture2D>({
+            type: GALACEAN.AssetType.Texture2D,
+            url: texturePath,
+            //mipmap: true  // 启用 Mipmap
+            
+          }).then(texture => {
+            // 设置材质并应用纹理
+            texture.generateMipmaps();
+            const material = new GALACEAN.PBRMaterial(self.engine);
+            material.baseTexture = texture;
+            material.baseColor.set(1, 1, 1, 1);  // 确保 baseColor 是白色，以便完全显示颜色纹理
+            // 设置为双面渲染，禁用背面剔除
+            //material.renderFace = GALACEAN.RenderFace.Double; // 确保材质双面渲染
+            // 应用材质到所有的 MeshRenderer
+            //material.renderState.rasterState.cullMode = GALACEAN.CullMode.Off; // 禁用背面剔除
+            this.meshRenderers[14].setMaterial(material);
+            this.meshRenderers[0].setMaterial(material);
+            //this.meshRenderers[14].update(0.01); // 强制更新渲染器
+          
+            
+            console.log("Texture applied to material:", material.baseTexture);
+          }).catch(error => {
+            console.error("Error loading texture:", error);
+          });
+
     })
+
   }
 }
