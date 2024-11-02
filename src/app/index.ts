@@ -26,7 +26,8 @@ async function setupDefaultScene(scene: GALACEAN.Scene){
   // 设置天空盒
   createSky(scene);
   // 加入灯光
-  const lightProcedure = new LightProcedure(root);
+  //const lightProcedure = new LightProcedure(root);
+  const lightProcedure = root.addComponent(LightProcedure);
   // 加载建筑
   const building = new Building(root);
   // 加载人群
