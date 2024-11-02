@@ -52,6 +52,7 @@ export class ZipLoader extends Loader<GLTFResource>{
 export class Building{
   private parentGroup: GALACEAN.Entity;
   private engine:GALACEAN.Engine;
+  meshRenderers: GALACEAN.MeshRenderer[];
   constructor(root:GALACEAN.Entity) {
     this.parentGroup = root.createChild("buildingParent");
     this.engine = root.engine;
@@ -59,6 +60,7 @@ export class Building{
     this.parentGroup.transform.setScale(0.0001,0.0001,0.0001);
     // this.load().then(r => {});
     this.loadZip(1).then(r => {});
+    this.meshRenderers=[];
   }
 
   async load(){
