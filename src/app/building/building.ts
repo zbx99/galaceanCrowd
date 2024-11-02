@@ -71,10 +71,30 @@ export class Building{
       const { materials, animations } = asset;
       const defaultSceneRoot = asset.instantiateSceneRoot();
       this.parentGroup.addChild(defaultSceneRoot);
-      const meshRenderers: any[] = [];
-      defaultSceneRoot.getComponentsIncludeChildren(GALACEAN.MeshRenderer, meshRenderers);
+      //const meshRenderers: any[] = [];
+      defaultSceneRoot.getComponentsIncludeChildren(GALACEAN.MeshRenderer, this.meshRenderers);
     })
   }
+
+  colors = [
+    new GALACEAN.Color(1, 0, 0, 1),    // 红色 直播大屏幕
+    new GALACEAN.Color(0, 1, 0, 1),    // 绿色 直播屏幕上面的大螺母
+    new GALACEAN.Color(0, 0, 1, 1),    // 蓝色 直播屏幕的框框
+    new GALACEAN.Color(1, 1, 0, 1),    // 黄色 斜前方的扶手
+    new GALACEAN.Color(1, 0, 1, 1),    // 品红色
+    new GALACEAN.Color(0, 1, 1, 1),    // 青色 侧面的扶手
+    new GALACEAN.Color(0.5, 0, 0.5, 1), // 紫色
+    new GALACEAN.Color(0.5, 0.5, 0, 1), // 橄榄色
+    new GALACEAN.Color(0.5, 0.5, 1, 1), // 浅蓝色
+    new GALACEAN.Color(1, 0.5, 0, 1),  // 橙色
+    new GALACEAN.Color(0, 0.5, 0.5, 1), // 深青色
+    new GALACEAN.Color(0.5, 1, 0.5, 1), // 浅绿色
+    new GALACEAN.Color(1, 0.5, 1, 1),  // 粉色
+    new GALACEAN.Color(0.5, 0, 0, 1),  // 深红色
+    new GALACEAN.Color(0, 0.5, 0, 1),  // 深绿色 就是体育馆主体
+    new GALACEAN.Color(0, 0, 0, 1)     // 黑色 顶上的架子
+];
+
 
   async loadZip(index:number){
     const baseUrl = "assets/Building/output"
