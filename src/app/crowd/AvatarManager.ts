@@ -89,6 +89,27 @@ export class AvatarManager{
 //     console.log("mesh vertice: ", vertice);
 //   });
 // });       
+  /**
+ * 非实例化方法
+ */
+      // const modelCount = 500;  // 要加载的模型数量
+      // const spacing = 1;      // 每个模型在 x 轴上的间隔距离
+      // let counter =0;
+      // for (let i = 0; i < modelCount; i++) {
+      //   // 克隆模型
+      //   let modelClone: GALACEAN.Entity= defaultSceneRoot.clone();
+      //   // 设置模型的位置，x 轴上稍微错开
+      //   if(i%10===0){
+      //     counter++;
+      //   }       
+
+      //   modelClone.transform.position.set(i%10*spacing, 0, counter);
+      //   // 将模型添加到场景中
+      //   this.crowdGroup.addChild(modelClone);
+      // }
+
+      
+
       })
     }
     // 加载设置LOD情况
