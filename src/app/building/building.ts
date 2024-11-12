@@ -130,7 +130,7 @@ export class Building{
             //material.renderFace = GALACEAN.RenderFace.Double; // 确保材质双面渲染
             // 应用材质到所有的 MeshRenderer
             //material.renderState.rasterState.cullMode = GALACEAN.CullMode.Off; // 禁用背面剔除
-            this.meshRenderers[14].setMaterial(material);
+            //this.meshRenderers[14].setMaterial(material);
             this.meshRenderers[0].setMaterial(material);
             //this.meshRenderers[14].update(0.01); // 强制更新渲染器
           
