@@ -32,12 +32,16 @@ export class AvatarManager{
     this.load_crowd(1);
   }
 
+
   load_crowd(modelLength:number) {
     // 加载基础GLB模型
     for (let i=0;i<modelLength;i++) {
       this.engine.resourceManager.load<GALACEAN.GLTFResource>({
         type:AssetType.GLTF,
-        url:"assets/crowd/man02/sim.glb"
+        url:"assets/crowd/man02/sim.gltf",
+        params: {
+          keepMeshData: true,
+        },
       }).then((asset)=>{
         this.crowdAsset.push(asset);
         // console.log(this.crowdAsset);
