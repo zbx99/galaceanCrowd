@@ -184,7 +184,56 @@ skinnedMeshRenderers.forEach(renderer => {
 
       })
     }
-    // 加载设置LOD情况
 
+
+    
+    // 加载设置LOD情况    
   }
+
+}
+
+/**
+ * 创建自定义实例化着色器
+ */
+function initCustomShader(): GALACEAN.Shader {
+  const vertexShader = `
+    attribute vec3 POSITION;
+    attribute vec3 NORMAL;
+    attribute vec3 INSTANCE_OFFSET;
+    attribute vec3 INSTANCE_COLOR;
+
+    uniform mat4 renderer_MVPMat;
+    uniform mat4 u_Bones[83]; // 根据骨骼数量调整
+
+    varying vec3 v_Color;
+
+    void main() {
+      // 简单的骨骼变换示例（需要根据实际骨骼数据调整）
+      vec4 skinnedPosition = vec4(POSITION, 1.0);
+      for (int i = 0; i < 4; i++) { // 假设每个顶点最多受4个骨骼影响
+        skinnedPosition += u_Bones[i] * skinnedPosition; // 需要结合骨骼权重
+      }
+
+      // 应用实例偏移
+      skinnedPosition.xyz += INSTANCE_OFFSET;
+
+      // 计算最终位置
+      gl_Position = renderer_MVPMat * skinnedPosition;
+
+      // 传递颜色
+      v_Color = INSTANCE_COLOR;
+    }
+  `;
+
+  const fragmentShader = `
+    precision mediump float;
+    varying vec3 v_Color;
+
+    void main() {
+      gl_FragColor = vec4(v_Color, 1.0);
+    }
+  `;
+
+  // 使用 Shader.create 正确创建着色器
+  return GALACEAN.Shader.create("CustomSkinnedShader", vertexShader, fragmentShader);
 }
