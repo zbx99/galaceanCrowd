@@ -237,3 +237,17 @@ function initCustomShader(): GALACEAN.Shader {
   // 使用 Shader.create 正确创建着色器
   return GALACEAN.Shader.create("CustomSkinnedShader", vertexShader, fragmentShader);
 }
+
+
+  /**
+ * 获取子节点上面的SkinnedMeshRenderer
+ */
+  function getAllSkinnedMeshRenderers(entity: GALACEAN.Entity, renderers: GALACEAN.SkinnedMeshRenderer[] = []) {
+    const skinnedMeshRenderer = entity.getComponent(GALACEAN.SkinnedMeshRenderer);
+    if (skinnedMeshRenderer) {
+      renderers.push(skinnedMeshRenderer);
+    }
+    entity.children.forEach(child => getAllSkinnedMeshRenderers(child, renderers));
+    return renderers;
+  }
+
