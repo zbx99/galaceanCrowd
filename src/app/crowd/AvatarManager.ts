@@ -1,5 +1,23 @@
 import * as GALACEAN from "@galacean/engine";
-import {AssetType} from "@galacean/engine";
+import {AssetType, IndexFormat, ModelMesh, SkinnedMeshRenderer, UnlitMaterial} from "@galacean/engine";
+
+import { OrbitControl } from "@galacean/engine-toolkit-controls";
+import {
+  Engine,
+  WebGLEngine,
+  BufferMesh,
+  Buffer,
+  BufferBindFlag,
+  BufferUsage,
+  MeshRenderer,
+  Material,
+  Shader,
+  VertexElement,
+  VertexElementFormat,
+  Vector3,
+  Camera,
+} from "@galacean/engine";
+
 export class AvatarManager{
   // 逐个加载创建Crowd
   private crowdGroup: GALACEAN.Entity;
