@@ -25,6 +25,7 @@ import { PBRMaterial, AmbientLight, AssetType } from '@galacean/engine'
 export class LightProcedure extends GALACEAN.Script {
   private lightGroup:GALACEAN.Entity;
   private directLight: GALACEAN.Entity | undefined;
+  private directLightTwo: GALACEAN.Entity | undefined;
   //private spotLight2: GALACEAN.Entity;
   private spotLights: GALACEAN.Entity[] = [];
 
@@ -72,9 +73,15 @@ export class LightProcedure extends GALACEAN.Script {
   createDirectLight(){
     this.directLight = this.lightGroup.createChild("directLight");
     const directLightComponent = this.directLight.addComponent(DirectLight);
-    directLightComponent.intensity = 2//0.6;
+    directLightComponent.intensity = 0.6;
     this.directLight.transform.setPosition(0,3,0);
     this.directLight.transform.setRotation(-45,-45,0);
+
+    // this.directLightTwo = this.lightGroup.createChild("directLightTwo");
+    // const directLightComponentTwo = this.directLightTwo.addComponent(DirectLight);
+    // directLightComponentTwo.intensity = 2//0.6;
+    // this.directLightTwo.transform.setPosition(0,3,0);
+    // this.directLightTwo.transform.setRotation(135,135,0);
   }
 
   //创建能够扫描全场的聚光灯
