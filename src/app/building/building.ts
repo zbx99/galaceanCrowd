@@ -119,7 +119,7 @@ export class Building{
             type: GALACEAN.AssetType.Texture2D,
             url: texturePath,
             //mipmap: true  // 启用 Mipmap
-            
+
           }).then(texture => {
             // 设置材质并应用纹理
             texture.generateMipmaps();
@@ -133,8 +133,8 @@ export class Building{
             //this.meshRenderers[14].setMaterial(material);
             this.meshRenderers[0].setMaterial(material);
             //this.meshRenderers[14].update(0.01); // 强制更新渲染器
-          
-            
+
+
             console.log("Texture applied to material:", material.baseTexture);
           }).catch(error => {
             console.error("Error loading texture:", error);

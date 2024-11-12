@@ -40,7 +40,7 @@ export class LightProcedure extends GALACEAN.Script {
   private spotLightRadius: number[] = []; //聚光灯半径
 
   constructor(root:GALACEAN.Entity) {
-    super(root); 
+    super(root);
     this.lightGroup = root.createChild("lightGroup");
     // 添加环境光
     this.createAmbientLight();
@@ -52,8 +52,8 @@ export class LightProcedure extends GALACEAN.Script {
 
     // 添加聚光灯
     this.createSpotlight(3,
-       [50,70,90], 
-       [new GALACEAN.Color(1, 0, 0, 1),new GALACEAN.Color(0, 1, 0, 1), new GALACEAN.Color(0, 0, 1, 1)], 
+       [50,70,90],
+       [new GALACEAN.Color(1, 0, 0, 1),new GALACEAN.Color(0, 1, 0, 1), new GALACEAN.Color(0, 0, 1, 1)],
        90);
 
     // this.createSpotlight(2,
@@ -90,7 +90,7 @@ export class LightProcedure extends GALACEAN.Script {
     this.sportLightPhase=phase;
     this.spotLightAmount=amount;
     this.spotLightRadius=radius;
-    
+
     for(let i=0; i<amount;i++)
     {
       const light = this.lightGroup.createChild("spotLight"+ i.toString());
