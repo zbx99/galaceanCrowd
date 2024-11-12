@@ -44,7 +44,10 @@ export class AvatarManager{
         },
       }).then((asset)=>{
         this.crowdAsset.push(asset);
-        // console.log(this.crowdAsset);
+        console.log("crowd asset: "+this.crowdAsset);
+        const defaultSceneRoot = asset.instantiateSceneRoot(); // 获取模型的根节点
+        console.log("defaultSceneRoot"+defaultSceneRoot);
+        const shader = initCustomShader();
         const Meshvertices: Float32Array[] = [];
 
         // const positions: [Vector3[]]=[[]]; 
@@ -89,6 +92,75 @@ export class AvatarManager{
 //     console.log("mesh vertice: ", vertice);
 //   });
 // });       
+
+  // 获取所有 SkinnedMeshRenderer 组件
+  const skinnedMeshRenderers = getAllSkinnedMeshRenderers(defaultSceneRoot);
+  if (skinnedMeshRenderers.length > 0) {
+    console.log(`Loaded ${skinnedMeshRenderers.length} SkinnedMeshRenderer(s) with bone animations.`);
+  }
+
+// Inside `load_crowd`
+const instanceCount = 1000;  // Number of instances
+const instanceStride = 6;    // Data per instance: position (xyz) + color (rgb)
+const instanceData = new Float32Array(instanceCount * instanceStride);
+
+// Generate random instance data
+for (let i = 0; i < instanceCount; i++) {
+  const offset = i * instanceStride;
+  instanceData[offset] = (Math.random() - 0.5) * 60; // X position
+  instanceData[offset + 1] = (Math.random() - 0.5) * 60; // Y position
+  instanceData[offset + 2] = (Math.random() - 0.5) * 60; // Z position
+  instanceData[offset + 3] = Math.random(); // Red color
+  instanceData[offset + 4] = Math.random(); // Green color
+  instanceData[offset + 5] = Math.random(); // Blue color
+}
+// // Create instance buffer
+// const instanceBuffer = new GALACEAN.Buffer(
+//   this.engine,
+//   GALACEAN.BufferBindFlag.VertexBuffer,
+//   instanceData,
+//   GALACEAN.BufferUsage.Static
+// );
+
+
+  // // Create gpu vertex buffer and index buffer.
+  // const vertexBuffer = new Buffer(
+  //   this.engine,
+  //   BufferBindFlag.VertexBuffer,
+  //   vertices,
+  //   BufferUsage.Static
+  // );
+
+
+
+// Apply instance buffer and material to each SkinnedMeshRenderer
+skinnedMeshRenderers.forEach(renderer => {
+  const sourceMesh = renderer.mesh as GALACEAN.ModelMesh;
+  const pos=sourceMesh.getPositions;
+  // for(let i=0;i<pos.length;i++)
+  // {
+    console.log("sourceMesh's positions length: "+pos.length)
+  //}
+
+
+  // Attach instance data to the mesh
+  if (sourceMesh) {
+    //sourceMesh.setVertexBufferBinding(instanceBuffer, 24, 1);
+    renderer.mesh = sourceMesh;
+    
+    // Apply custom shader
+    const material = new GALACEAN.Material(this.engine, shader);
+    renderer.setMaterial(material);
+  }
+});
+
+      // 添加到场景
+      this.crowdGroup.addChild(defaultSceneRoot);
+      console.log(`Models added to crowd group: ${this.crowdGroup.children.length}`);
+
+
+
+
   /**
  * 非实例化方法
  */
