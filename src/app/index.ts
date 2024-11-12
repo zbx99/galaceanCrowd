@@ -31,7 +31,7 @@ async function setupDefaultScene(scene: GALACEAN.Scene){
   // 加载建筑
   const building = new Building(root);
   // 加载人群
-  // const avatarManager = new AvatarManager(root,1);
+  const avatarManager = new AvatarManager(root,1);
 }
 
 function createSky(scene:GALACEAN.Scene){
