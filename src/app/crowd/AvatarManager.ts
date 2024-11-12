@@ -27,6 +27,8 @@ export class AvatarManager{
     this.crowdGroup = root.createChild("buildingParent");
     this.engine = root.engine;
     this.crowdAsset = new Array<GALACEAN.GLTFResource>();
+    this.crowdGroup.transform.setPosition(0,-30,0);
+    this.crowdGroup.transform.setScale(10,10,10);
     this.load_crowd(1);
   }
 
