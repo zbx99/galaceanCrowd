@@ -240,3 +240,25 @@ function initCustomShader(): GALACEAN.Shader {
 }
 
 
+function initCustomShader(): Shader {
+  const shader = Shader.create(
+    "CustomShader",
+    `uniform mat4 renderer_MVPMat;
+      attribute vec4 POSITION;
+      uniform mat4 renderer_MVMat;
+      void main() {
+        vec4 position = POSITION;
+        int instanceID = gl_InstanceID;
+        position.xyz += vec3(instanceID%10*2,0.,instanceID/10*2);
+        gl_Position = renderer_MVPMat * position;
+      }`,
+
+    `
+      void main() {
+        vec4 color = vec4(1.0,0.,0.,1.0);
+        gl_FragColor = color;
+      }
+      `
+  );
+  return shader;
+}
