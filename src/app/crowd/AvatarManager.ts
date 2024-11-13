@@ -42,15 +42,60 @@ export class AvatarManager {
 
 
   load_crowd() {
+      this.engine.resourceManager
+      .load<GALACEAN.GLTFResource>({
+        type: AssetType.GLTF,
+        url: "assets/crowd/man02/sim.gltf",
+        params: {
+          keepMeshData: true,
+        },
+      })
+      .then((gltf) => {
+        var i = 0
+        const scene = this.engine.sceneManager.activeScene;
+        const rootEntity = scene.createRootEntity("Root");
+        const shader = initCustomShader();
+        gltf.meshes?.forEach((meshes) => {
+          meshes?.forEach((mesh) => {
+            console.log("mesh count: ", gltf.meshes?.length);
+            console.log("gltf.materials count: ", gltf.materials!.length);
+            const orimaterial = gltf.materials![0];
+            console.log("orimaterial: ", orimaterial);
+            const pos = mesh.getPositions();
+            const normal = mesh.getNormals();
+            const indices = mesh.getIndices();
+            //console.log("try the new load fuction",pos);
+            
+            if(pos && normal)
             {
-              indicesArray=Array.from(indices);
+              const poss: Float32Array = new Float32Array(pos.length * 6);
+            for (let i = 0; i < pos.length; i++) {
+              poss[i * 6 + 0] = pos[i].x;
+              poss[i * 6 + 1] = pos[i].y;
+              poss[i * 6 + 2] = pos[i].z;
+              poss[i * 6 + 3] = normal[i].x;
+              poss[i * 6 + 4] = normal[i].y;
+              poss[i * 6 + 5] = normal[i].z;
             }
-            const indces = new Uint16Array(indicesArray);
-            meshIndices.push(indces);
-          }
 
+            const indexs: Uint16Array = new Uint16Array(indices);
+            //console.log("uvs", mesh.getUVs());
+            //callback(poss,indexs,orimaterial)
+            
+            console.log("shader created");
+            const cubeEntity = rootEntity.createChild("Cube");
+            cubeEntity.transform.setPosition(0, -30, 0.5);
+            cubeEntity.transform.setScale(5, 5, 5);
+            const cubeRenderer = cubeEntity.addComponent(MeshRenderer);
+            orimaterial.shader = shader;
+            cubeRenderer.mesh = createCustomMesh(this.engine, poss, indexs); // Use `createCustomMesh()` to create custom instance cube mesh.
+            cubeRenderer.setMaterial(orimaterial);
+            }
+          });
+          i++;
         });
       });
+    
 
       /**
        * display the contents of "vertice" array to check it
