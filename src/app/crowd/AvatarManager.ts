@@ -20,16 +20,16 @@ import {
 
 export class AvatarManager {
   // 逐个加载创建Crowd
-  private crowdGroup: GALACEAN.Entity;
+  //private crowdGroup: GALACEAN.Entity;
   private engine: GALACEAN.Engine;
-  private crowdAsset: Array<GALACEAN.GLTFResource>;
+  //private crowdAsset: Array<GALACEAN.GLTFResource>;
 
   constructor(root: GALACEAN.Entity, modelLength: number) {
-    this.crowdGroup = root.createChild("buildingParent");
+    //this.crowdGroup = root.createChild("buildingParent");
     this.engine = root.engine;
-    this.crowdAsset = new Array<GALACEAN.GLTFResource>();
-    this.crowdGroup.transform.setPosition(0, -0.25, 0.5);
-    this.crowdGroup.transform.setScale(0.1, 0.1, 0.1);
+    // this.crowdAsset = new Array<GALACEAN.GLTFResource>();
+    // this.crowdGroup.transform.setPosition(0, -30, 0);
+    // this.crowdGroup.transform.setScale(10, 10, 10);
     this.load_crowd();
   }
 
