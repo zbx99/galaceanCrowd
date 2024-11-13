@@ -49,6 +49,7 @@ export class AvatarManager {
       console.log("defaultSceneRoot" + defaultSceneRoot);
       const shader = initCustomShader();
       const Meshvertices: Float32Array[] = [];
+      const Meshindices: Uint16Array[] = [];
 
       // const positions: [Vector3[]]=[[]];
       // const normals: [Vector3[]]=[[]];
@@ -59,12 +60,14 @@ export class AvatarManager {
       asset.meshes?.forEach((meshes) => {
         meshes?.forEach((mesh) => {
           const verticesArray: number[] = [];
-          console.log("position", mesh.getPositions());
-          // console.log("indices", mesh.getIndices());
+          let indicesArray: number[] =[];
+          //console.log("position", mesh.getPositions());
+          console.log("indices", mesh.getIndices());
           // console.log("uvs", mesh.getUVs());
-          console.log("normals", mesh.getNormals());
+          //console.log("normals", mesh.getNormals());
           const positions = mesh.getPositions();
           const normals = mesh.getNormals();
+          const indices=mesh.getIndices();
           // 确保 positions 和 normals 都不是 null
           if (positions && normals) {
             for (let i = 0; i < positions.length; i++) {
@@ -77,6 +80,16 @@ export class AvatarManager {
             //console.log("vertices value: "+ vertices);
             Meshvertices.push(vertices);
           }
+          if(indices)
+          {
+            for(let i=0; i<indices.length;i++)
+            {
+              indicesArray=Array.from(indices);
+            }
+            const indces = new Uint16Array(indicesArray);
+            Meshindices.push(indces);
+          }
+
         });
       });
 
