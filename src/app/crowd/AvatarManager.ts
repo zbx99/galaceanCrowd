@@ -181,14 +181,33 @@ function initCustomShader(): GALACEAN.Shader {
   const fragmentShader = `
     precision mediump float;
     varying vec3 v_Color;
+function createCustomMesh(engine:GALACEAN.Engine,  poss:Float32Array, indexs:Uint16Array): GALACEAN.Mesh {
+  const geometry = new BufferMesh(engine, "CustomCubeGeometry");
+  const posBufferObj = new Buffer(
+    engine,
+    BufferBindFlag.VertexBuffer,
+    poss,
+    BufferUsage.Static
+  );
 
-    void main() {
-      gl_FragColor = vec4(v_Color, 1.0);
-    }
-  `;
+  const indexBufferObj = new Buffer(
+    engine,
+    BufferBindFlag.IndexBuffer,
+    indexs,
+    BufferUsage.Static
+  );
 
-  // 使用 Shader.create 正确创建着色器
-  return GALACEAN.Shader.create("CustomSkinnedShader", vertexShader, fragmentShader);
+  geometry.setVertexBufferBinding(posBufferObj, 24, 0);
+  geometry.setIndexBufferBinding(indexBufferObj, IndexFormat.UInt16);
+
+  // 添加vertexElements
+  geometry.setVertexElements([
+    new VertexElement("POSITION", 0, VertexElementFormat.Vector3, 0, 0),
+    new VertexElement("NORMAL", 12, VertexElementFormat.Vector3, 0, 0), 
+  ]);
+  geometry.addSubMesh(0, indexs.length);
+  geometry.instanceCount = 5000;
+  return geometry;
 }
 
 
