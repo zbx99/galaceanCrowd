@@ -30,7 +30,14 @@ export class AvatarManager {
     // this.crowdAsset = new Array<GALACEAN.GLTFResource>();
     // this.crowdGroup.transform.setPosition(0, -30, 0);
     // this.crowdGroup.transform.setScale(10, 10, 10);
+    const startTime = performance.now(); // 获取开始时间
+
     this.load_crowd();
+
+    const endTime = performance.now(); // 获取结束时间
+    const elapsedTime = endTime - startTime; // 计算耗时（单位为毫秒）
+    console.log(`代码运行时间：${elapsedTime.toFixed(2)} 毫秒`);
+    
   }
 
 
