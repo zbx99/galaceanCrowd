@@ -48,8 +48,8 @@ export class AvatarManager {
       const defaultSceneRoot = asset.instantiateSceneRoot(); // 获取模型的根节点
       console.log("defaultSceneRoot" + defaultSceneRoot);
       const shader = initCustomShader();
-      const Meshvertices: Float32Array[] = [];
-      const Meshindices: Uint16Array[] = [];
+      const meshVertices: Float32Array[] = [];
+      const meshIndices: Uint16Array[] = [];
 
       // const positions: [Vector3[]]=[[]];
       // const normals: [Vector3[]]=[[]];
@@ -78,7 +78,7 @@ export class AvatarManager {
             }
             const vertices = new Float32Array(verticesArray);
             //console.log("vertices value: "+ vertices);
-            Meshvertices.push(vertices);
+            meshVertices.push(vertices);
           }
           if(indices)
           {
@@ -87,7 +87,7 @@ export class AvatarManager {
               indicesArray=Array.from(indices);
             }
             const indces = new Uint16Array(indicesArray);
-            Meshindices.push(indces);
+            meshIndices.push(indces);
           }
 
         });
@@ -106,6 +106,7 @@ export class AvatarManager {
         //   });
         // });
 
+        
         // let i =0;
         // meshIndices.forEach(meshind => {
         //   console.log("check indice count in each mesh: ", meshind.length);
