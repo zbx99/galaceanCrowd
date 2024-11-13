@@ -8,6 +8,7 @@ import * as GALACEAN from "@galacean/engine";
 import {BackgroundMode, PrimitiveMesh, SkyBoxMaterial, TextureCube} from "@galacean/engine";
 import {FreeControl} from "@galacean/engine-toolkit-controls";
 import {AvatarManager} from "@/app/crowd/AvatarManager";
+import { Stats } from "@galacean/engine-toolkit-stats";
 
 console.log('it works!')
 
@@ -16,6 +17,7 @@ async function setupDefaultScene(scene: GALACEAN.Scene){
   const cameraEntity = root.createChild("camera");
   cameraEntity.transform.setPosition(0,  0,  0);
   cameraEntity.transform.lookAt(new GALACEAN.Vector3(0,0,0),new GALACEAN.Vector3(0,1,0));
+  cameraEntity.addComponent(Stats);
   let camera = cameraEntity.addComponent(GALACEAN.Camera);
   const controler = cameraEntity.addComponent(FreeControl);
   camera.fieldOfView = 50;
