@@ -42,54 +42,6 @@ export class AvatarManager {
 
 
   load_crowd() {
-    // 加载基础GLB模型
-    this.engine.resourceManager.load<GALACEAN.GLTFResource>({
-      type: AssetType.GLTF,
-      url: "assets/crowd/man02/sim.gltf",
-      params: {
-        keepMeshData: true,
-      },
-    }).then((asset) => {
-      this.crowdAsset.push(asset);
-      console.log("crowd asset: " + this.crowdAsset);
-      const defaultSceneRoot = asset.instantiateSceneRoot(); // 获取模型的根节点
-      console.log("defaultSceneRoot" + defaultSceneRoot);
-      const shader = initCustomShader();
-      const meshVertices: Float32Array[] = [];
-      const meshIndices: Uint16Array[] = [];
-
-      // const positions: [Vector3[]]=[[]];
-      // const normals: [Vector3[]]=[[]];
-
-      /**
-       * create the "vertice" array which will be applied to use in buffer mesh creation
-       */
-      asset.meshes?.forEach((meshes) => {
-        meshes?.forEach((mesh) => {
-          const verticesArray: number[] = [];
-          let indicesArray: number[] =[];
-          //console.log("position", mesh.getPositions());
-          console.log("indices", mesh.getIndices());
-          // console.log("uvs", mesh.getUVs());
-          //console.log("normals", mesh.getNormals());
-          const positions = mesh.getPositions();
-          const normals = mesh.getNormals();
-          const indices=mesh.getIndices();
-          // 确保 positions 和 normals 都不是 null
-          if (positions && normals) {
-            for (let i = 0; i < positions.length; i++) {
-              // 把每个 Vector3 的 x, y, z 添加到 verticesArray 中
-              verticesArray.push(positions[i].x, positions[i].y, positions[i].z);
-              verticesArray.push(normals[i].x, normals[i].y, normals[i].z);
-              // convert verticesArray from number to Float32Array
-            }
-            const vertices = new Float32Array(verticesArray);
-            //console.log("vertices value: "+ vertices);
-            meshVertices.push(vertices);
-          }
-          if(indices)
-          {
-            for(let i=0; i<indices.length;i++)
             {
               indicesArray=Array.from(indices);
             }
