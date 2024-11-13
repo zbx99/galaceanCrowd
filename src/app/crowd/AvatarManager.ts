@@ -96,15 +96,25 @@ export class AvatarManager {
       /**
        * display the contents of "vertice" array to check it
        */
-        // console.log("Meshvertices element count: ", Meshvertices.length);
+        // console.log("meshVertices element count: ", meshVertices.length);
         // console.log("asset.meshes: ", asset.meshes?.length);
 
-        // Meshvertices.forEach(Meshvertices => {
-        //   console.log("check vertice count in each mesh: ", Meshvertices.length);
-        //   Meshvertices.forEach(vertice => {
+        // meshVertices.forEach(Meshvert => {
+        //   console.log("check vertice count in each mesh: ", Meshvert.length);
+        //   Meshvert.forEach(vertice => {
         //     console.log("mesh vertice: ", vertice);
         //   });
         // });
+
+        // let i =0;
+        // meshIndices.forEach(meshind => {
+        //   console.log("check indice count in each mesh: ", meshind.length);
+        //   meshind.forEach(indices => {
+        //     i++;
+        //     //console.log("mesh indice: ", indices);
+        //   });
+        // });
+        // console.log("indice count in array: ", i);
 
         const meshRenderers: any[] = [];
         defaultSceneRoot.getComponentsIncludeChildren(MeshRenderer,meshRenderers);
