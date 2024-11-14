@@ -23,6 +23,7 @@ export class AvatarManager {
   //private crowdGroup: GALACEAN.Entity;
   private engine: GALACEAN.Engine;
   //private crowdAsset: Array<GALACEAN.GLTFResource>;
+  static modelCount: number =100;
 
   constructor(root: GALACEAN.Entity, modelLength: number) {
     //this.crowdGroup = root.createChild("buildingParent");
@@ -166,7 +167,7 @@ function createCustomMesh(engine:GALACEAN.Engine,  poss:Float32Array, indexs:Uin
     new VertexElement("UVV", 0, VertexElementFormat.Vector2, 1, 0)
   ]);
   geometry.addSubMesh(0, indexs.length);
-  geometry.instanceCount = 5000;
+  geometry.instanceCount = AvatarManager.modelCount;
   return geometry;
 }
 function initCustomShader(): Shader {// 庄edited
