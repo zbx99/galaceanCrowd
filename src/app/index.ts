@@ -22,7 +22,7 @@ async function setupDefaultScene(scene: GALACEAN.Scene){
   const controler = cameraEntity.addComponent(FreeControl);
   camera.fieldOfView = 50;
   camera.farClipPlane = 50000;
-  camera.enableFrustumCulling=false;
+  //camera.enableFrustumCulling=false;
   controler.movementSpeed = 100;
   controler.rotateSpeed = 1;
   // 设置天空盒
