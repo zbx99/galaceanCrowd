@@ -51,48 +51,56 @@ export class AvatarManager {
         },
       })
       .then((gltf) => {
-        var i = 0
         const scene = this.engine.sceneManager.activeScene;
         const rootEntity = scene.createRootEntity("Root");
         const shader = initCustomShader();
+        
         gltf.meshes?.forEach((meshes) => {
+          let j = 0;
           meshes?.forEach((mesh) => {
             console.log("mesh count: ", gltf.meshes?.length);
             console.log("gltf.materials count: ", gltf.materials!.length);
-            const orimaterial = gltf.materials![0];
+            const orimaterial = gltf.materials![j];
             console.log("orimaterial: ", orimaterial);
+            const texture = orimaterial.shaderData.getTexture('material_BaseTexture');
+            console.log(texture)
             const pos = mesh.getPositions();
             const normal = mesh.getNormals();
             const indices = mesh.getIndices();
+            const uvs = mesh.getUVs();
             //console.log("try the new load fuction",pos);
             
-            if(pos && normal)
+            if(pos && normal && uvs)
             {
+              const uvss: Float32Array = new Float32Array(uvs.length * 2);
               const poss: Float32Array = new Float32Array(pos.length * 6);
-            for (let i = 0; i < pos.length; i++) {
-              poss[i * 6 + 0] = pos[i].x;
-              poss[i * 6 + 1] = pos[i].y;
-              poss[i * 6 + 2] = pos[i].z;
-              poss[i * 6 + 3] = normal[i].x;
-              poss[i * 6 + 4] = normal[i].y;
-              poss[i * 6 + 5] = normal[i].z;
-            }
+              for (let i = 0; i < pos.length; i++) {
+                poss[i * 6 + 0] = pos[i].x;
+                poss[i * 6 + 1] = pos[i].y;
+                poss[i * 6 + 2] = pos[i].z;
+                poss[i * 6 + 3] = normal[i].x;
+                poss[i * 6 + 4] = normal[i].y;
+                poss[i * 6 + 5] = normal[i].z;
+                uvss[i * 2 + 0] = uvs[i].x;
+                uvss[i * 2 + 1] = uvs[i].y;
+              }
 
-            const indexs: Uint16Array = new Uint16Array(indices);
+              const indexs: Uint16Array = new Uint16Array(indices);
             //console.log("uvs", mesh.getUVs());
             //callback(poss,indexs,orimaterial)
             
-            console.log("shader created");
-            const cubeEntity = rootEntity.createChild("Cube");
-            cubeEntity.transform.setPosition(0, -30, 0.5);
-            cubeEntity.transform.setScale(5, 5, 5);
-            const cubeRenderer = cubeEntity.addComponent(MeshRenderer);
-            orimaterial.shader = shader;
-            cubeRenderer.mesh = createCustomMesh(this.engine, poss, indexs); // Use `createCustomMesh()` to create custom instance cube mesh.
-            cubeRenderer.setMaterial(orimaterial);
+              const personEntity = rootEntity.createChild("PersonPart" + j.toString());
+              personEntity.transform.setPosition(0, -30, 0.5);
+              personEntity.transform.setScale(5, 5, 5);
+              const material = new Material(this.engine, shader);
+              material.shaderData.setTexture("Tex", texture);
+              orimaterial.shader = shader;
+              const personRenderer = personEntity.addComponent(MeshRenderer);
+              personRenderer.mesh = createCustomMesh(this.engine, poss, indexs, uvss); // Use `createCustomMesh()` to create custom instance person mesh.
+              personRenderer.setMaterial(material);
             }
           });
-          i++;
+          j++;
         });
       });
   
@@ -127,15 +135,20 @@ export class AvatarManager {
 
 
 
-function createCustomMesh(engine:GALACEAN.Engine,  poss:Float32Array, indexs:Uint16Array): GALACEAN.Mesh {
-  const geometry = new BufferMesh(engine, "CustomCubeGeometry");
+function createCustomMesh(engine:GALACEAN.Engine,  poss:Float32Array, indexs:Uint16Array, uvss:Float32Array): GALACEAN.Mesh {
+  const geometry = new BufferMesh(engine, "CustompersonGeometry");
   const posBufferObj = new Buffer(
     engine,
     BufferBindFlag.VertexBuffer,
     poss,
     BufferUsage.Static
   );
-
+  const uvBufferObj = new Buffer(
+    engine,
+    BufferBindFlag.VertexBuffer,
+    uvss,
+    BufferUsage.Static
+  );
   const indexBufferObj = new Buffer(
     engine,
     BufferBindFlag.IndexBuffer,
@@ -145,32 +158,38 @@ function createCustomMesh(engine:GALACEAN.Engine,  poss:Float32Array, indexs:Uin
 
   geometry.setVertexBufferBinding(posBufferObj, 24, 0);
   geometry.setIndexBufferBinding(indexBufferObj, IndexFormat.UInt16);
-
+  geometry.setVertexBufferBinding(uvBufferObj, 8, 1);
   // 添加vertexElements
   geometry.setVertexElements([
     new VertexElement("POSITION", 0, VertexElementFormat.Vector3, 0, 0),
     new VertexElement("NORMAL", 12, VertexElementFormat.Vector3, 0, 0), 
+    new VertexElement("UVV", 0, VertexElementFormat.Vector2, 1, 0)
   ]);
   geometry.addSubMesh(0, indexs.length);
   geometry.instanceCount = 5000;
   return geometry;
 }
-function initCustomShader(): Shader {
+function initCustomShader(): Shader {// 庄edited
   const shader = Shader.create(
-    "CustomShader",
+    "InstanceShader",
     `uniform mat4 renderer_MVPMat;
       attribute vec4 POSITION;
+      attribute vec2 UVV;
       uniform mat4 renderer_MVMat;
+      varying vec2 v_uv;
       void main() {
         vec4 position = POSITION;
         int instanceID = gl_InstanceID;
         position.xyz += vec3(instanceID%10*2,0.,instanceID/10*2);
         gl_Position = renderer_MVPMat * position;
+        v_uv = UVV;
       }`,
 
     `
+      uniform sampler2D Tex;
+      varying vec2 v_uv;
       void main() {
-        vec4 color = vec4(1.0,0.,0.,1.0);
+        vec4 color = texture2D(Tex, v_uv);
         gl_FragColor = color;
       }
       `
