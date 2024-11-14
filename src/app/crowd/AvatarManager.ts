@@ -1,5 +1,5 @@
 import * as GALACEAN from "@galacean/engine";
-import {AssetType, IndexFormat, ModelMesh, SkinnedMeshRenderer, UnlitMaterial} from "@galacean/engine";
+import {AssetType, BoundingBox, IndexFormat, Matrix, ModelMesh, SkinnedMeshRenderer, UnlitMaterial} from "@galacean/engine";
 
 import {OrbitControl} from "@galacean/engine-toolkit-controls";
 import {
@@ -97,7 +97,12 @@ export class AvatarManager {
               material.shaderData.setTexture("Tex", texture);
               orimaterial.shader = shader;
               const personRenderer = personEntity.addComponent(MeshRenderer);
+
+
+
               personRenderer.mesh = createCustomMesh(this.engine, poss, indexs, uvss); // Use `createCustomMesh()` to create custom instance person mesh.
+              const box = new BoundingBox(personEntity.transform.position, new Vector3(AvatarManager.modelCount%10*2,50.,AvatarManager.modelCount/10*2));
+              personRenderer.mesh.bounds=box;
               personRenderer.setMaterial(material);
             }
           });
