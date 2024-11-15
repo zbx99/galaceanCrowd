@@ -52,82 +52,77 @@ export class AvatarManager {
         },
       })
       .then((gltf) => {
+        const meshRenderers:any[]=[];
+        gltf.defaultSceneRoot.getComponentsIncludeChildren(MeshRenderer,meshRenderers);
         const scene = this.engine.sceneManager.activeScene;
         const rootEntity = scene.createRootEntity("Root");
         const shader = initCustomShader();
-        
-        gltf.meshes?.forEach((meshes) => {
-          let j = 0;
-          meshes?.forEach((mesh) => {
-            console.log("mesh count: ", gltf.meshes?.length);
-            console.log("gltf.materials count: ", gltf.materials!.length);
-            const orimaterial = gltf.materials![j];
-            console.log("orimaterial: ", orimaterial);
-            const texture = orimaterial.shaderData.getTexture('material_BaseTexture');
-            console.log(texture)
-            const pos = mesh.getPositions();
-            const normal = mesh.getNormals();
-            const indices = mesh.getIndices();
-            const uvs = mesh.getUVs();
-            //console.log("try the new load fuction",pos);
-            
-            if(pos && normal && uvs)
-            {
-              const uvss: Float32Array = new Float32Array(uvs.length * 2);
-              const poss: Float32Array = new Float32Array(pos.length * 6);
-              for (let i = 0; i < pos.length; i++) {
-                poss[i * 6 + 0] = pos[i].x;
-                poss[i * 6 + 1] = pos[i].y;
-                poss[i * 6 + 2] = pos[i].z;
-                poss[i * 6 + 3] = normal[i].x;
-                poss[i * 6 + 4] = normal[i].y;
-                poss[i * 6 + 5] = normal[i].z;
-                uvss[i * 2 + 0] = uvs[i].x;
-                uvss[i * 2 + 1] = uvs[i].y;
-              }
+        let j = 0
+        meshRenderers.forEach((meshrender)=>{
+          const orimaterial = meshrender._materials[0];
+          const mesh = meshrender._mesh;
+          const texture = orimaterial.shaderData.getTexture('material_BaseTexture');
+          const pos = mesh.getPositions();
+          const normal = mesh.getNormals();
+          const indices = mesh.getIndices();
+          const uvs = mesh.getUVs();
 
-              const indexs: Uint16Array = new Uint16Array(indices);
-            //console.log("uvs", mesh.getUVs());
-            //callback(poss,indexs,orimaterial)
-            
-              const personEntity = rootEntity.createChild("PersonPart" + j.toString());
-              personEntity.transform.setPosition(0, -30, 0.5);
-              personEntity.transform.setScale(5, 5, 5);
-              const material = new Material(this.engine, shader);
-              material.shaderData.setTexture("Tex", texture);
-              orimaterial.shader = shader;
-              const personRenderer = personEntity.addComponent(MeshRenderer);
-
-
-
-              personRenderer.mesh = createCustomMesh(this.engine, poss, indexs, uvss); // Use `createCustomMesh()` to create custom instance person mesh.
-              const box = new BoundingBox(personEntity.transform.position, new Vector3(AvatarManager.modelCount%10*2,50.,AvatarManager.modelCount/10*2));
-              personRenderer.mesh.bounds=box;
-              personRenderer.setMaterial(material);
+          if(pos && normal && uvs){
+            const uvss: Float32Array = new Float32Array(uvs.length * 2);
+            const poss: Float32Array = new Float32Array(pos.length * 6);
+            for (let i = 0; i < pos.length; i++) {
+              poss[i * 6 + 0] = pos[i].x;
+              poss[i * 6 + 1] = pos[i].y;
+              poss[i * 6 + 2] = pos[i].z;
+              poss[i * 6 + 3] = normal[i].x;
+              poss[i * 6 + 4] = normal[i].y;
+              poss[i * 6 + 5] = normal[i].z;
+              uvss[i * 2 + 0] = uvs[i].x;
+              uvss[i * 2 + 1] = uvs[i].y;
             }
-          });
-          j++;
-        });
+            const indexs: Uint16Array = new Uint16Array(indices);
+            const personEntity = rootEntity.createChild("PersonPart" + j.toString());
+            personEntity.transform.setPosition(0, -10, 0.5);
+            personEntity.transform.setScale(5, 5, 5);
+            const material = new Material(this.engine, shader);
+            const personRenderer = personEntity.addComponent(MeshRenderer);
+            if(texture){
+              material.shaderData.setTexture("Tex", texture);
+              material.shaderData.setFloat("ifTex", 1.0);
+            }else{
+              const color = orimaterial.shaderData.getColor('material_BaseColor')
+              material.shaderData.setColor("BaseColor", color)
+              material.shaderData.setFloat("ifTex", 0.0);
+            }
+            personRenderer.mesh = createCustomMesh(this.engine, poss, indexs, uvss); // Use `createCustomMesh()` to create custom instance person mesh.
+            personRenderer.setMaterial(material);
+
+            //为自定义mesh设置bounds
+            const box = new BoundingBox(personEntity.transform.position, new Vector3(AvatarManager.modelCount%10*2,50.,AvatarManager.modelCount/10*2));
+            personRenderer.mesh.bounds=box;
+            j++;
+          }
+        })
       });
   
     //   /**
     //    * 非实例化方法
     //    */
-    //   // const modelCount = 500;  // 要加载的模型数量
-    //   // const spacing = 1;      // 每个模型在 x 轴上的间隔距离
-    //   // let counter =0;
-    //   // for (let i = 0; i < modelCount; i++) {
-    //   //   // 克隆模型
-    //   //   let modelClone: GALACEAN.Entity= defaultSceneRoot.clone();
-    //   //   // 设置模型的位置，x 轴上稍微错开
-    //   //   if(i%10===0){
-    //   //     counter++;
-    //   //   }
+      // const modelCount = 500;  // 要加载的模型数量
+      // const spacing = 1;      // 每个模型在 x 轴上的间隔距离
+      // let counter =0;
+      // for (let i = 0; i < modelCount; i++) {
+      //   // 克隆模型
+      //   let modelClone: GALACEAN.Entity= defaultSceneRoot.clone();
+      //   // 设置模型的位置，x 轴上稍微错开
+      //   if(i%10===0){
+      //     counter++;
+      //   }
 
-    //   //   modelClone.transform.position.set(i%10*spacing, 0, counter);
-    //   //   // 将模型添加到场景中
-    //   //   this.crowdGroup.addChild(modelClone);
-    //   // }
+      //   modelClone.transform.position.set(i%10*spacing, 0, counter);
+      //   // 将模型添加到场景中
+      //   this.crowdGroup.addChild(modelClone);
+      // }
 
 
     // })
