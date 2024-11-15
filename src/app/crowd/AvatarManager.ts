@@ -178,7 +178,9 @@ function createCustomMesh(engine:GALACEAN.Engine,  poss:Float32Array, indexs:Uin
 function initCustomShader(): Shader {// 庄edited
   const shader = Shader.create(
     "InstanceShader",
-    `uniform mat4 renderer_MVPMat;
+    `    
+      #include <common>
+      uniform mat4 renderer_MVPMat;
       attribute vec4 POSITION;
       attribute vec2 UVV;
       uniform mat4 renderer_MVMat;
@@ -191,12 +193,21 @@ function initCustomShader(): Shader {// 庄edited
         v_uv = UVV;
       }`,
 
-    `
+    ` #include <common>
       uniform sampler2D Tex;
+      uniform float ifTex;
+      uniform vec4 BaseColor;
       varying vec2 v_uv;
       void main() {
-        vec4 color = texture2D(Tex, v_uv);
-        gl_FragColor = color;
+        if(ifTex == 1.){
+          gl_FragColor = texture2D(Tex, v_uv);
+        }
+        else{
+          if(BaseColor.a == 0.){
+            discard;
+          }
+          gl_FragColor =  BaseColor;
+        }
       }
       `
   );
