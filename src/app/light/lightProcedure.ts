@@ -52,7 +52,7 @@ export class LightProcedure extends GALACEAN.Script {
 
     // 添加聚光灯
     this.createSpotlight(3,
-       [50,70,90],
+       [100,100,100],
        [new GALACEAN.Color(1, 0, 0, 1),new GALACEAN.Color(0, 1, 0, 1), new GALACEAN.Color(0, 0, 1, 1)],
        90);
 

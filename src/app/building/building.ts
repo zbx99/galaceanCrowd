@@ -56,7 +56,8 @@ export class Building{
   constructor(root:GALACEAN.Entity) {
     this.parentGroup = root.createChild("buildingParent");
     this.engine = root.engine;
-    this.parentGroup.transform.setPosition(0,-30,0);
+    //this.parentGroup.transform.setPosition(0,-30,0);
+    this.parentGroup.transform.setPosition(0, -10, 0.5)
     this.parentGroup.transform.setScale(0.0001,0.0001,0.0001);
     // this.load().then(r => {});
     this.loadZip(1).then(r => {});
