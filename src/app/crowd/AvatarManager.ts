@@ -46,7 +46,7 @@ export class AvatarManager {
       this.engine.resourceManager
       .load<GALACEAN.GLTFResource>({
         type: AssetType.GLTF,
-        url: "assets/crowd/man02/sim.gltf",
+        url: "assets/test.glb",
         params: {
           keepMeshData: true,
         },
