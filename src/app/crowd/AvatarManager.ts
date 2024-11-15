@@ -23,7 +23,7 @@ export class AvatarManager {
   //private crowdGroup: GALACEAN.Entity;
   private engine: GALACEAN.Engine;
   //private crowdAsset: Array<GALACEAN.GLTFResource>;
-  static modelCount: number =100;
+  static modelCount: number =5;
 
   constructor(root: GALACEAN.Entity, modelLength: number) {
     //this.crowdGroup = root.createChild("buildingParent");
