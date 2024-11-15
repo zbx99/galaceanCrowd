@@ -1,5 +1,5 @@
 import * as GALACEAN from "@galacean/engine";
-import {AssetType, BoundingBox, IndexFormat, Matrix, ModelMesh, SkinnedMeshRenderer, UnlitMaterial} from "@galacean/engine";
+import {AssetType, BoundingBox, Color, IndexFormat, Matrix, ModelMesh, SkinnedMeshRenderer, UnlitMaterial} from "@galacean/engine";
 
 import {OrbitControl} from "@galacean/engine-toolkit-controls";
 import {
@@ -136,9 +136,6 @@ export class AvatarManager {
 
   // 加载设置LOD情况
 }
-
-
-
 
 
 function createCustomMesh(engine:GALACEAN.Engine,  poss:Float32Array, indexs:Uint16Array, uvss:Float32Array): GALACEAN.Mesh {
