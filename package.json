@@ -86,5 +86,8 @@
     "babel",
     "typescript",
     "scss"
-  ]
+  ],
+  "dependencies": {
+    "@galacean/engine-shader-lab": "^1.3.24"
+  }
 }

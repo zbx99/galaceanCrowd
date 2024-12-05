@@ -17,28 +17,31 @@ import {
   Vector3,
   Camera,
 } from "@galacean/engine";
+import {ShaderLabVertPBRSource, ShaderLabFragPBRSource, instancePBRshader} from "@/app/utils/shaderlab";
+import {InstancePBRMaterial} from "@/app/utils/InstancePBRMaterial";
 
 export class AvatarManager {
   // 逐个加载创建Crowd
-  //private crowdGroup: GALACEAN.Entity;
+  private crowdGroup: GALACEAN.Entity;
   private engine: GALACEAN.Engine;
   //private crowdAsset: Array<GALACEAN.GLTFResource>;
   static modelCount: number =5;
 
   constructor(root: GALACEAN.Entity, modelLength: number) {
-    //this.crowdGroup = root.createChild("buildingParent");
+    this.crowdGroup = root.createChild("CrowdParent");
     this.engine = root.engine;
     // this.crowdAsset = new Array<GALACEAN.GLTFResource>();
     // this.crowdGroup.transform.setPosition(0, -30, 0);
-    // this.crowdGroup.transform.setScale(10, 10, 10);
+    // this.crowdGroup.transform.setScale(0.5, 0.5, 0.5);
     const startTime = performance.now(); // 获取开始时间
 
     this.load_crowd();
 
+
     const endTime = performance.now(); // 获取结束时间
     const elapsedTime = endTime - startTime; // 计算耗时（单位为毫秒）
     console.log(`代码运行时间：${elapsedTime.toFixed(2)} 毫秒`);
-    
+
   }
 
 
@@ -46,21 +49,41 @@ export class AvatarManager {
       this.engine.resourceManager
       .load<GALACEAN.GLTFResource>({
         type: AssetType.GLTF,
-        url: "assets/test.glb",
+        url: "assets/crowd/test.glb",
         params: {
           keepMeshData: true,
         },
       })
       .then((gltf) => {
+
         const meshRenderers:any[]=[];
         gltf.defaultSceneRoot.getComponentsIncludeChildren(MeshRenderer,meshRenderers);
         const scene = this.engine.sceneManager.activeScene;
         const rootEntity = scene.createRootEntity("Root");
         const shader = initCustomShader();
-        let j = 0
+        let j = 0;
+        // 直接添加gltf
+        // rootEntity.transform.setPosition(0.5, -10, 0.5);
+        // rootEntity.transform.setScale(5,5,5);
+        // rootEntity.addChild(gltf.defaultSceneRoot);
+
+        // meshrenderer中添加原mesh
+        // meshRenderers.forEach((meshrender)=>{
+        //   const orimaterial = meshrender._materials[0];
+        //   const mesh = meshrender._mesh;
+        //   const personEntity = rootEntity.createChild("PersonPart" + j.toString());
+        //   personEntity.transform.setPosition(0, -10, 0.5);
+        //   personEntity.transform.setScale(5, 5, 5);
+        //   const personRenderer = personEntity.addComponent(MeshRenderer);
+        //   personRenderer.mesh = mesh;
+        //   personRenderer.setMaterial(orimaterial);
+        // })
+
+        // meshrenderer中添加自定义mesh
         meshRenderers.forEach((meshrender)=>{
           const orimaterial = meshrender._materials[0];
           const mesh = meshrender._mesh;
+          console.log(mesh);
           const texture = orimaterial.shaderData.getTexture('material_BaseTexture');
           const pos = mesh.getPositions();
           const normal = mesh.getNormals();
@@ -85,6 +108,10 @@ export class AvatarManager {
             personEntity.transform.setPosition(0, -10, 0.5);
             personEntity.transform.setScale(5, 5, 5);
             const material = new Material(this.engine, shader);
+            // const material = new InstancePBRMaterial(this.engine);
+            // orimaterial.cloneTo(material);
+            // material.shader = instancePBRshader;
+            // console.log(material,orimaterial);
             const personRenderer = personEntity.addComponent(MeshRenderer);
             if(texture){
               material.shaderData.setTexture("Tex", texture);
@@ -95,7 +122,7 @@ export class AvatarManager {
               material.shaderData.setFloat("ifTex", 0.0);
             }
             personRenderer.mesh = createCustomMesh(this.engine, poss, indexs, uvss); // Use `createCustomMesh()` to create custom instance person mesh.
-            personRenderer.setMaterial(material);
+            personRenderer.setMaterial(orimaterial);
 
             //为自定义mesh设置bounds
             const box = new BoundingBox(personEntity.transform.position, new Vector3(AvatarManager.modelCount%10*2,50.,AvatarManager.modelCount/10*2));
@@ -104,7 +131,7 @@ export class AvatarManager {
           }
         })
       });
-  
+
     //   /**
     //    * 非实例化方法
     //    */
@@ -160,7 +187,7 @@ function createCustomMesh(engine:GALACEAN.Engine,  poss:Float32Array, indexs:Uin
   // 添加vertexElements
   geometry.setVertexElements([
     new VertexElement("POSITION", 0, VertexElementFormat.Vector3, 0, 0),
-    new VertexElement("NORMAL", 12, VertexElementFormat.Vector3, 0, 0), 
+    new VertexElement("NORMAL", 12, VertexElementFormat.Vector3, 0, 0),
     new VertexElement("UVV", 0, VertexElementFormat.Vector2, 1, 0)
   ]);
   geometry.addSubMesh(0, indexs.length);
@@ -170,7 +197,7 @@ function createCustomMesh(engine:GALACEAN.Engine,  poss:Float32Array, indexs:Uin
 function initCustomShader(): Shader {// 庄edited
   const shader = Shader.create(
     "InstanceShader",
-    `    
+    `
       #include <common>
       uniform mat4 renderer_MVPMat;
       attribute vec4 POSITION;
